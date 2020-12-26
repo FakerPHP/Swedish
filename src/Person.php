@@ -2,7 +2,11 @@
 
 namespace Faker\Swedish;
 
-class Person
+use Faker\Calculator\Luhn;
+use Faker\Extension\Extension;
+use Faker\Extension\Helper;
+
+class Person implements Extension
 {
     private $formats = [
         '{{firstName}} {{lastName}}',
@@ -111,6 +115,11 @@ class Person
         'Öberg'
     ];
 
+    private $titleMale = ['Mr.', 'Dr.', 'Prof.'];
+
+    private $titleFemale = ['Mrs.', 'Ms.', 'Miss', 'Dr.', 'Prof.'];
+
+
     /**
      * National Personal Identity number (personnummer)
      * @link http://en.wikipedia.org/wiki/Personal_identity_number_(Sweden)
@@ -125,17 +134,104 @@ class Person
         }
         $datePart = $birthdate->format('ymd');
 
-        if ($gender && $gender == static::GENDER_MALE) {
-            $randomDigits = (string) static::numerify('##') . static::randomElement([1, 3, 5, 7, 9]);
+        if ($gender && $gender == PersonInterface::GENDER_MALE) {
+            $randomDigits = (string) Helper::numerify('##') . Helper::randomElement([1, 3, 5, 7, 9]);
         } elseif ($gender && $gender == static::GENDER_FEMALE) {
-            $randomDigits = (string) static::numerify('##') . static::randomElement([0, 2, 4, 6, 8]);
+            $randomDigits = (string) Helper::numerify('##') . Helper::randomElement([0, 2, 4, 6, 8]);
         } else {
-            $randomDigits = (string) static::numerify('###');
+            $randomDigits = (string) Helper::numerify('###');
         }
-
 
         $checksum = Luhn::computeCheckDigit($datePart . $randomDigits);
 
         return $datePart . '-' . $randomDigits . $checksum;
+    }
+
+      /**
+     * @param string|null $gender 'male', 'female' or null for any
+     *
+     * @return string
+     *
+     * @example 'John'
+     */
+    public function firstName($gender = null)
+    {
+        if ($gender === null) {
+            if (mt_rand(0, 1) === 1) {
+                $gender = PersonInterface::GENDER_MALE;
+            } else {
+                $gender = PersonInterface::GENDER_FEMALE;
+            }
+        }
+
+        if ($gender === PersonInterface::GENDER_MALE) {
+            return $this->firstNameMale();
+        }
+
+        if ($gender === PersonInterface::GENDER_FEMALE) {
+            return $this->firstNameFemale();
+        }
+    }
+
+    public function firstNameMale()
+    {
+        return Helper::randomElement($this->firstNameMale);
+    }
+
+    public function firstNameFemale()
+    {
+        return Helper::randomElement($this->firstNameFemale);
+    }
+
+    /**
+     * @example 'Doe'
+     *
+     * @return string
+     */
+    public function lastName()
+    {
+        return Helper::randomElement($this->lastName);
+    }
+
+    /**
+     * @example 'Mrs.'
+     *
+     * @param string|null $gender 'male', 'female' or null for any
+     *
+     * @return string
+     */
+    public function title($gender = null)
+    {
+        if ($gender === null) {
+            if (mt_rand(0, 1) === 1) {
+                $gender = PersonInterface::GENDER_MALE;
+            } else {
+                $gender = PersonInterface::GENDER_FEMALE;
+            }
+        }
+
+        if ($gender === PersonInterface::GENDER_MALE) {
+            return $this->titleMale();
+        }
+
+        if ($gender === PersonInterface::GENDER_FEMALE) {
+            return $this->titleFemale();
+        }
+    }
+
+    /**
+     * @example 'Mr.'
+     */
+    public function titleMale()
+    {
+        return Helper::randomElement($this->titleMale);
+    }
+
+    /**
+     * @example 'Mrs.'
+     */
+    public function titleFemale()
+    {
+        return Helper::randomElement($this->titleFemale);
     }
 }

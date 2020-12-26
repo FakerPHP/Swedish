@@ -21,8 +21,8 @@ class Factory
         }
 
         // Add Swedish specific extension to replace some default ones
-        $builder->add(SwedishPerson::class, PersonInterface::class);
+        $builder->add(Person::class, PersonInterface::class);
 
-        return $builder->build();
+        return new Generator($builder->build());
     }
 }

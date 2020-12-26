@@ -2,8 +2,15 @@
 
 namespace Faker\Swedish;
 
-class Company
+use Faker\Extension\Extension;
+use Faker\Extension\GeneratorAwareExtension;
+use Faker\Extension\GeneratorAwareExtensionTrait;
+use Faker\Extension\Helper;
+
+class Company implements GeneratorAwareExtension
 {
+    use GeneratorAwareExtensionTrait;
+
     private $formats = [
         '{{lastName}} {{companySuffix}}',
         '{{lastName}} {{companySuffix}}',
@@ -19,8 +26,31 @@ class Company
 
     private $jobTitles = ['Automationsingenjör', 'Bagare', 'Digital Designer', 'Ekonom', 'Ekonomichef', 'Elektronikingenjör', 'Försäljare', 'Försäljningschef', 'Innovationsdirektör', 'Investeringsdirektör', 'Journalist', 'Kock', 'Kulturstrateg', 'Läkare', 'Lokförare', 'Mäklare', 'Programmerare', 'Projektledare', 'Sjuksköterska', 'Utvecklare', 'UX Designer', 'Webbutvecklare'];
 
+    /**
+     * @example 'Acme Ltd'
+     *
+     * @return string
+     */
+    public function company()
+    {
+        $format = Helper::randomElement($this->formats);
+
+        return $this->generator->parse($format);
+    }
+
+    /**
+     * @example 'Ltd'
+     *
+     * @return string
+     */
+    public function companySuffix()
+    {
+        return Helper::randomElement($this->companySuffix);
+    }
+
+
     public function jobTitle()
     {
-        return $this->jobTitles[array_rand($this->jobTitles)];
+        return Helper::randomElement($this->jobTitles);
     }
 }

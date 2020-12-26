@@ -2,7 +2,10 @@
 
 namespace Faker\Swedish;
 
-class PhoneNumber
+use Faker\Extension\Extension;
+use Faker\Extension\Helper;
+
+class PhoneNumber implements Extension
 {
     /**
      * @var array Swedish phone number formats
@@ -34,4 +37,24 @@ class PhoneNumber
         '+46(0)%######',
         '+46%######',
     ];
+
+        /**
+     * @example '555-123-546'
+     */
+    public function phoneNumber()
+    {
+        return Helper::numerify(Helper::randomElement($this->formats));
+    }
+
+    /**
+     * @example +27113456789
+     *
+     * @return string
+     */
+    public function e164PhoneNumber()
+    {
+        $formats = ['+%############'];
+
+        return Helper::numerify(Helper::randomElement($formats));
+    }
 }
