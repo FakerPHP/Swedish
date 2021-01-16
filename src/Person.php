@@ -3,10 +3,10 @@
 namespace Faker\Swedish;
 
 use Faker\Calculator\Luhn;
-use Faker\Extension\Extension;
 use Faker\Extension\Helper;
+use Faker\Extension\PersonExtension;
 
-class Person implements Extension
+class Person implements PersonExtension
 {
     private $formats = [
         '{{firstName}} {{lastName}}',
@@ -130,14 +130,14 @@ class Person implements Extension
      *
      * @return string on format XXXXXX-XXXX
      */
-    public function personalIdentityNumber(\DateTime $birthdate = null, $gender = null)
+    public function personalIdentityNumber(\DateTime $birthdate = null, $gender = null): string
     {
         if (!$birthdate) {
             $birthdate = \Faker\Provider\DateTime::dateTimeThisCentury();
         }
         $datePart = $birthdate->format('ymd');
 
-        if ($gender && PersonInterface::GENDER_MALE == $gender) {
+        if ($gender && PersonExtension::GENDER_MALE == $gender) {
             $randomDigits = (string) Helper::numerify('##').Helper::randomElement([1, 3, 5, 7, 9]);
         } elseif ($gender && $gender == static::GENDER_FEMALE) {
             $randomDigits = (string) Helper::numerify('##').Helper::randomElement([0, 2, 4, 6, 8]);
@@ -153,45 +153,41 @@ class Person implements Extension
     /**
      * @param string|null $gender 'male', 'female' or null for any
      *
-     * @return string
-     *
      * @example 'John'
      */
-    public function firstName($gender = null)
+    public function firstName($gender = null): string
     {
         if (null === $gender) {
             if (1 === mt_rand(0, 1)) {
-                $gender = PersonInterface::GENDER_MALE;
+                $gender = PersonExtension::GENDER_MALE;
             } else {
-                $gender = PersonInterface::GENDER_FEMALE;
+                $gender = PersonExtension::GENDER_FEMALE;
             }
         }
 
-        if (PersonInterface::GENDER_MALE === $gender) {
+        if (PersonExtension::GENDER_MALE === $gender) {
             return $this->firstNameMale();
         }
 
-        if (PersonInterface::GENDER_FEMALE === $gender) {
+        if (PersonExtension::GENDER_FEMALE === $gender) {
             return $this->firstNameFemale();
         }
     }
 
-    public function firstNameMale()
+    public function firstNameMale(): string
     {
         return Helper::randomElement($this->firstNameMale);
     }
 
-    public function firstNameFemale()
+    public function firstNameFemale(): string
     {
         return Helper::randomElement($this->firstNameFemale);
     }
 
     /**
      * @example 'Doe'
-     *
-     * @return string
      */
-    public function lastName()
+    public function lastName(): string
     {
         return Helper::randomElement($this->lastName);
     }
@@ -200,24 +196,22 @@ class Person implements Extension
      * @example 'Mrs.'
      *
      * @param string|null $gender 'male', 'female' or null for any
-     *
-     * @return string
      */
-    public function title($gender = null)
+    public function title($gender = null): string
     {
         if (null === $gender) {
             if (1 === mt_rand(0, 1)) {
-                $gender = PersonInterface::GENDER_MALE;
+                $gender = PersonExtension::GENDER_MALE;
             } else {
-                $gender = PersonInterface::GENDER_FEMALE;
+                $gender = PersonExtension::GENDER_FEMALE;
             }
         }
 
-        if (PersonInterface::GENDER_MALE === $gender) {
+        if (PersonExtension::GENDER_MALE === $gender) {
             return $this->titleMale();
         }
 
-        if (PersonInterface::GENDER_FEMALE === $gender) {
+        if (PersonExtension::GENDER_FEMALE === $gender) {
             return $this->titleFemale();
         }
     }
@@ -225,7 +219,7 @@ class Person implements Extension
     /**
      * @example 'Mr.'
      */
-    public function titleMale()
+    public function titleMale(): string
     {
         return Helper::randomElement($this->titleMale);
     }
@@ -233,8 +227,13 @@ class Person implements Extension
     /**
      * @example 'Mrs.'
      */
-    public function titleFemale()
+    public function titleFemale(): string
     {
         return Helper::randomElement($this->titleFemale);
+    }
+
+    public function name($gender = null)
+    {
+        return $this->firstName($gender).' '.$this->lastName();
     }
 }
