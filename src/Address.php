@@ -2,6 +2,8 @@
 
 namespace Faker\Swedish;
 
+use Faker\Extension\Helper;
+
 class Address
 {
     private $buildingNumber = ['%###', '%##', '%#', '%#?', '%', '%?'];

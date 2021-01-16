@@ -2,7 +2,6 @@
 
 namespace Faker\Swedish;
 
-use Faker\Extension\Extension;
 use Faker\Extension\GeneratorAwareExtension;
 use Faker\Extension\GeneratorAwareExtensionTrait;
 use Faker\Extension\Helper;
@@ -24,7 +23,13 @@ class Company implements GeneratorAwareExtension
 
     private $companySuffix = ['AB', 'HB'];
 
-    private $jobTitles = ['Automationsingenjör', 'Bagare', 'Digital Designer', 'Ekonom', 'Ekonomichef', 'Elektronikingenjör', 'Försäljare', 'Försäljningschef', 'Innovationsdirektör', 'Investeringsdirektör', 'Journalist', 'Kock', 'Kulturstrateg', 'Läkare', 'Lokförare', 'Mäklare', 'Programmerare', 'Projektledare', 'Sjuksköterska', 'Utvecklare', 'UX Designer', 'Webbutvecklare'];
+    private $jobTitles = [
+        'Automationsingenjör', 'Bagare', 'Digital Designer', 'Ekonom', 'Ekonomichef',
+        'Elektronikingenjör', 'Försäljare', 'Försäljningschef', 'Innovationsdirektör',
+        'Investeringsdirektör', 'Journalist', 'Kock', 'Kulturstrateg', 'Läkare',
+        'Lokförare', 'Mäklare', 'Programmerare', 'Projektledare', 'Sjuksköterska',
+        'Utvecklare', 'UX Designer', 'Webbutvecklare'
+    ];
 
     /**
      * @example 'Acme Ltd'

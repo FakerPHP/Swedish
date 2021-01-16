@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Faker\Swedish;
 
+use Faker\Extension\ContainerBuilder;
 use Faker\Generator;
-use Faker\Container\ContainerBuilder;
 
 /**
  *
@@ -21,7 +21,11 @@ class Factory
         }
 
         // Add Swedish specific extension to replace some default ones
+        $builder->add(Address::class, AddressInterface::class);
+        $builder->add(Company::class, CompanyInterface::class);
         $builder->add(Person::class, PersonInterface::class);
+        $builder->add(PhoneNumber::class, PhoneNumberInterface::class);
+        $builder->add(Municipality::class);
 
         return new Generator($builder->build());
     }
