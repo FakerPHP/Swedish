@@ -6,8 +6,6 @@ use Faker\Extension\Extension;
 
 /**
  * Swedish municipalities
- *
- * @author Tobias Nyholm <tobias.nyholm@gmail.com>
  */
 class Municipality implements Extension
 {
@@ -79,7 +77,7 @@ class Municipality implements Extension
         'Älmhults kommun', 'Älvdalens kommun', 'Älvkarleby kommun', 'Älvsbyns kommun',
         'Ängelholms kommun', 'Öckerö kommun', 'Ödeshögs kommun', 'Örebro kommun',
         'Örkelljunga kommun', 'Örnsköldsviks kommun', 'Östersunds kommun', 'Österåkers kommun',
-        'Östhammars kommun', 'Östra Göinge kommun', 'Överkalix kommun', 'Övertorneå kommun'
+        'Östhammars kommun', 'Östra Göinge kommun', 'Överkalix kommun', 'Övertorneå kommun',
     ];
 
     public function municipality(): string

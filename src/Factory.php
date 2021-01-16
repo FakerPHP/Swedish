@@ -7,15 +7,12 @@ namespace Faker\Swedish;
 use Faker\Extension\ContainerBuilder;
 use Faker\Generator;
 
-/**
- *
- * @author Tobias Nyholm <tobias.nyholm@gmail.com>
- */
 class Factory
 {
     public static function sweden(): Generator
     {
         $builder = new ContainerBuilder();
+
         foreach (ContainerBuilder::defaultExtensions() as $id => $definition) {
             $builder->add($definition, $id);
         }

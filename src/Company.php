@@ -18,7 +18,7 @@ class Company implements GeneratorAwareExtension
         '{{lastName}} & {{lastName}} {{companySuffix}}',
         '{{lastName}} & {{lastName}}',
         '{{lastName}} och {{lastName}}',
-        '{{lastName}} och {{lastName}} {{companySuffix}}'
+        '{{lastName}} och {{lastName}} {{companySuffix}}',
     ];
 
     private $companySuffix = ['AB', 'HB'];
@@ -28,7 +28,7 @@ class Company implements GeneratorAwareExtension
         'Elektronikingenjör', 'Försäljare', 'Försäljningschef', 'Innovationsdirektör',
         'Investeringsdirektör', 'Journalist', 'Kock', 'Kulturstrateg', 'Läkare',
         'Lokförare', 'Mäklare', 'Programmerare', 'Projektledare', 'Sjuksköterska',
-        'Utvecklare', 'UX Designer', 'Webbutvecklare'
+        'Utvecklare', 'UX Designer', 'Webbutvecklare',
     ];
 
     /**
@@ -52,7 +52,6 @@ class Company implements GeneratorAwareExtension
     {
         return Helper::randomElement($this->companySuffix);
     }
-
 
     public function jobTitle()
     {

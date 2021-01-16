@@ -38,7 +38,7 @@ class PhoneNumber implements Extension
         '+46%######',
     ];
 
-        /**
+    /**
      * @example '555-123-546'
      */
     public function phoneNumber()
