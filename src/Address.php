@@ -65,29 +65,29 @@ class Address implements AddressExtension, GeneratorAwareExtension
      * @var array Swedish street name formats
      */
     private $streetNameFormats = [
-        '{{lastName}}{{streetSuffix}}',
-        '{{lastName}}{{streetSuffix}}',
-        '{{firstName}}{{streetSuffix}}',
-        '{{firstName}}{{streetSuffix}}',
-        '{{streetPrefix}}{{streetSuffix}}',
-        '{{streetPrefix}}{{streetSuffix}}',
-        '{{streetPrefix}}{{streetSuffix}}',
-        '{{streetPrefix}}{{streetSuffix}}',
-        '{{lastName}} {{streetSuffixWord}}',
+        '{{lastName}}{{Faker\Swedish\Address->streetSuffix}}',
+        '{{lastName}}{{Faker\Swedish\Address->streetSuffix}}',
+        '{{firstName}}{{Faker\Swedish\Address->streetSuffix}}',
+        '{{firstName}}{{Faker\Swedish\Address->streetSuffix}}',
+        '{{Faker\Swedish\Address->streetPrefix}}{{Faker\Swedish\Address->streetSuffix}}',
+        '{{Faker\Swedish\Address->streetPrefix}}{{Faker\Swedish\Address->streetSuffix}}',
+        '{{Faker\Swedish\Address->streetPrefix}}{{Faker\Swedish\Address->streetSuffix}}',
+        '{{Faker\Swedish\Address->streetPrefix}}{{Faker\Swedish\Address->streetSuffix}}',
+        '{{lastName}} {{Faker\Swedish\Address->streetSuffixWord}}',
     ];
 
     /**
      * @var array Swedish street address formats
      */
     private $streetAddressFormats = [
-        '{{streetName}} {{buildingNumber}}',
+        '{{Faker\Swedish\Address->streetName}} {{Faker\Swedish\Address->buildingNumber}}',
     ];
 
     /**
      * @var array Swedish address formats
      */
     private $addressFormats = [
-        "{{streetAddress}}\n{{postcode}} {{city}}",
+        "{{Faker\Swedish\Address->streetAddress}}\n{{Faker\Swedish\Address->postcode}} {{Faker\Swedish\Address->city}}",
     ];
 
     public function buildingNumber(): string
@@ -98,6 +98,9 @@ class Address implements AddressExtension, GeneratorAwareExtension
     public function address(): string
     {
         // TODO
+        $format = Helper::randomElement($this->addressFormats);
+
+        return $this->generator->parse($format);
     }
 
     public function city(): string
@@ -112,11 +115,31 @@ class Address implements AddressExtension, GeneratorAwareExtension
 
     public function streetName(): string
     {
-        // TODO
+        $format = Helper::randomElement($this->streetNameFormats);
+
+        return $this->generator->parse($format);
     }
 
     public function streetAddress(): string
     {
         // TODO
+        $format = Helper::randomElement($this->streetAddressFormats);
+
+        return $this->generator->parse($format);
+    }
+
+    public function streetPrefix(): string
+    {
+        return Helper::randomElement($this->streetPrefix);
+    }
+
+    public function streetSuffix(): string
+    {
+        return Helper::randomElement($this->streetSuffix);
+    }
+
+    public function streetSuffixWord(): string
+    {
+        return Helper::randomElement($this->streetSuffixWord);
     }
 }
