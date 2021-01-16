@@ -2,10 +2,10 @@
 
 namespace Faker\Swedish;
 
-use Faker\Extension\Extension;
 use Faker\Extension\Helper;
+use Faker\Extension\PhoneNumberExtension;
 
-class PhoneNumber implements Extension
+class PhoneNumber implements PhoneNumberExtension
 {
     /**
      * @var array Swedish phone number formats
@@ -38,20 +38,18 @@ class PhoneNumber implements Extension
         '+46%######',
     ];
 
-        /**
+    /**
      * @example '555-123-546'
      */
-    public function phoneNumber()
+    public function phoneNumber(): string
     {
         return Helper::numerify(Helper::randomElement($this->formats));
     }
 
     /**
      * @example +27113456789
-     *
-     * @return string
      */
-    public function e164PhoneNumber()
+    public function e164PhoneNumber(): string
     {
         $formats = ['+%############'];
 

@@ -2,27 +2,35 @@
 
 namespace Faker\Swedish;
 
-class Address
+use Faker\Extension\AddressExtension;
+use Faker\Extension\GeneratorAwareExtension;
+use Faker\Extension\GeneratorAwareExtensionTrait;
+use Faker\Extension\Helper;
+
+class Address implements AddressExtension, GeneratorAwareExtension
 {
+    use GeneratorAwareExtensionTrait;
+
     private $buildingNumber = ['%###', '%##', '%#', '%#?', '%', '%?'];
 
     private $streetPrefix = [
-        'Stor', 'Små', 'Lill', 'Sjö', 'Kungs', 'Drottning', 'Hamn', 'Brunns', 'Linné', 'Vasa', 'Ring', 'Freds'
+        'Stor', 'Små', 'Lill', 'Sjö', 'Kungs', 'Drottning', 'Hamn', 'Brunns', 'Linné', 'Vasa', 'Ring', 'Freds',
     ];
 
     private $streetSuffix = [
-        'vägen', 'gatan', 'gränd', 'stigen', 'backen', 'liden'
+        'vägen', 'gatan', 'gränd', 'stigen', 'backen', 'liden',
     ];
 
     private $streetSuffixWord = [
-        'Allé', 'Gata', 'Väg', 'Backe'
+        'Allé', 'Gata', 'Väg', 'Backe',
     ];
 
     private $postcode = ['%####', '%## ##'];
 
     /**
      * @var array Swedish city names
-     * @link http://sv.wikipedia.org/wiki/Lista_%C3%B6ver_Sveriges_t%C3%A4torter
+     *
+     * @see http://sv.wikipedia.org/wiki/Lista_%C3%B6ver_Sveriges_t%C3%A4torter
      */
     private $cityNames = [
         'Abbekås', 'Abborrberget', 'Agunnaryd', 'Alberga', 'Alby', 'Alfta', 'Algutsrum', 'Alingsås', 'Allerum', 'Almunge', 'Alsike', 'Alstad', 'Alster', 'Alsterbro', 'Alstermo', 'Alunda', 'Alvesta', 'Alvhem', 'Alvik', 'Alvik', 'Ambjörby', 'Ambjörnarp', 'Ammenäs', 'Andalen', 'Anderslöv', 'Anderstorp', 'Aneby', 'Angelstad', 'Angered', 'Ankarsrum', 'Ankarsvik', 'Anneberg', 'Anneberg', 'Annelund', 'Annelöv', 'Antnäs', 'Aplared', 'Arboga', 'Arbrå', 'Ardala', 'Arentorp', 'Arild', 'Arjeplog', 'Arkelstorp', 'Arnäsvall', 'Arnö', 'Arontorp', 'Arvidsjaur', 'Arvika', 'Aröd och Timmervik', 'Askeby', 'Askersby', 'Askersund', 'Asmundtorp', 'Asperö', 'Aspås', 'Avan', 'Avesta', 'Axvall',
@@ -50,101 +58,88 @@ class Address
         'Zinkgruvan',
         'Åby', 'Åby', 'Åbyggeby', 'Åbytorp', 'Åhus', 'Åkarp', 'Åkers styckebruk', 'Åkersberga', 'Ålberga', 'Åled', 'Ålem', 'Åmmeberg', 'Åmot', 'Åmotfors', 'Åmsele', 'Åmynnet', 'Åmål', 'Ånge', 'Ånäset', 'Åre', 'Årjäng', 'Årstad', 'Årsunda', 'Åryd', 'Åryd', 'Ås', 'Ås', 'Åsa', 'Åsarne', 'Åsarp', 'Åsbro', 'Åsby', 'Åseda', 'Åsele', 'Åselstad', 'Åsen', 'Åsenhöga', 'Åsensbruk', 'Åshammar', 'Åsljunga', 'Åstol', 'Åstorp', 'Återvall', 'Åtorp', 'Åtvidaberg',
         'Älandsbro', 'Älgarås', 'Älghult', 'Älmhult', 'Älmsta', 'Älta', 'Älvdalen', 'Älvkarleby', 'Älvnäs', 'Älvsbyn', 'Älvsered', 'Älvängen', 'Äng', 'Änge', 'Ängelholm', 'Ängsholmen', 'Ängsvik', 'Äppelbo', 'Ärla', 'Äsköping', 'Äspered', 'Äsperöd', 'Ätran',
-        'Öbonäs', 'Öckerö', 'Ödeborg', 'Ödeshög', 'Ödsmål', 'Ödåkra', 'Öggestorp', 'Öjersjö', 'Ölmanäs', 'Ölmbrotorp', 'Ölme', 'Ölmstad', 'Ölsta', 'Önneköp', 'Önnestad', 'Örbyhus', 'Örebro', 'Öregrund', 'Örkelljunga', 'Örnsköldsvik', 'Örserum', 'Örsjö', 'Örslösa', 'Örsundsbro', 'Örtagården', 'Örtofta', 'Örviken', 'Ösmo', 'Östadkulle', 'Östansjö', 'Östavall', 'Österbybruk', 'Österbymo', 'Österforse', 'Österfärnebo', 'Österhagen och Bergliden', 'Österslöv', 'Österstad', 'Östersund', 'Östervåla', 'Östhammar', 'Östhamra', 'Östmark', 'Östnor', 'Östorp och Ådran', 'Östra Bispgården', 'Östra Frölunda', 'Östra Grevie', 'Östra Husby', 'Östra Kallfors', 'Östra Karup', 'Östra Ljungby', 'Östra Ryd', 'Östra Sönnarslöv', 'Östra Tommarp', 'Östra Ånneröd', 'Östraby', 'Överboda', 'Överhörnäs', 'Överkalix', 'Överlida', 'Övertorneå', 'Överum', 'Övre Soppero', 'Övre Svartlå', 'Öxabäck', 'Öxeryd'
-    ];
-
-    private $cityFormats = [
-        '{{cityName}}'
-    ];
-
-    private $state = [];
-
-    private $stateAbbr = [];
-
-    private $country = [
-        'Afghanistan', 'Albanien', 'Algeriet', 'Amerikanska Jungfruöarna', 'Amerikanska Samoa', 'Andorra', 'Angola', 'Anguilla', 'Antarktis', 'Antigua och Barbuda', 'Argentina', 'Armenien', 'Aruba', 'Australien', 'Azerbajdzjan',
-        'Bahamas', 'Bahrain', 'Bangladesh', 'Barbados', 'Belgien', 'Belize', 'Benin', 'Bermuda', 'Bhutan', 'Bolivia', 'Bosnien och Hercegovina', 'Botswana', 'Bouvetön', 'Brasilien', 'Brittiska Indiska oceanöarna', 'Brittiska Jungfruöarna', 'Brunei', 'Bulgarien', 'Burkina Faso', 'Burundi',
-        'Caymanöarna', 'Centralafrikanska republiken', 'Chile', 'Colombia', 'Cooköarna', 'Costa Rica', 'Cypern',
-        'Danmark', 'Djibouti', 'Dominica', 'Dominikanska republiken',
-        'Ecuador', 'Egypten', 'Ekvatorialguinea', 'El Salvador', 'Elfenbenskusten', 'Eritrea', 'Estland', 'Etiopien',
-        'Falklandsöarna', 'Fiji', 'Filippinerna', 'Finland', 'Frankrike', 'Franska Guyana', 'Franska Polynesien', 'Franska Sydterritorierna', 'Färöarna', 'Förenade Arabemiraten',
-        'Gabon', 'Gambia', 'Georgien', 'Ghana', 'Gibraltar', 'Grekland', 'Grenada', 'Grönland', 'Guadeloupe', 'Guam', 'Guatemala', 'Guernsey', 'Guinea', 'Guinea-Bissau', 'Guyana',
-        'Haiti', 'Heard- och McDonaldöarna', 'Honduras', 'Hongkong (S.A.R. Kina)',
-        'Indien', 'Indonesien', 'Irak', 'Iran', 'Irland', 'Island', 'Isle of Man', 'Israel', 'Italien',
-        'Jamaica', 'Japan', 'Jemen', 'Jersey', 'Jordanien', 'Julön',
-        'Kambodja', 'Kamerun', 'Kanada', 'Kap Verde', 'Kazakstan', 'Kenya', 'Kina', 'Kirgizistan', 'Kiribati', 'Kokosöarna', 'Komorerna', 'Kongo-Brazzaville', 'Kongo-Kinshasa', 'Kroatien', 'Kuba', 'Kuwait',
-        'Laos', 'Lesotho', 'Lettland', 'Libanon', 'Liberia', 'Libyen', 'Liechtenstein', 'Litauen', 'Luxemburg',
-        'Macao (S.A.R. Kina)', 'Madagaskar', 'Makedonien', 'Malawi', 'Malaysia', 'Maldiverna', 'Mali', 'Malta', 'Marocko', 'Marshallöarna', 'Martinique', 'Mauretanien', 'Mauritius', 'Mayotte', 'Mexiko', 'Mikronesien', 'Moldavien', 'Monaco', 'Mongoliet', 'Montenegro', 'Montserrat', 'Moçambique', 'Myanmar',
-        'Namibia', 'Nauru', 'Nederländerna', 'Nederländska Antillerna', 'Nepal', 'Nicaragua', 'Niger', 'Nigeria', 'Niue', 'Nordkorea', 'Nordmarianerna', 'Norfolkön', 'Norge', 'Nya Kaledonien', 'Nya Zeeland',
-        'Oman',
-        'Pakistan', 'Palau', 'Palestinska territoriet', 'Panama', 'Papua Nya Guinea', 'Paraguay', 'Peru', 'Pitcairn', 'Polen', 'Portugal', 'Puerto Rico',
-        'Qatar',
-        'Rumänien', 'Rwanda', 'Ryssland', 'Réunion',
-        'S:t Barthélemy', 'S:t Helena', 'S:t Kitts och Nevis', 'S:t Lucia', 'S:t Martin', 'S:t Pierre och Miquelon', 'S:t Vincent och Grenadinerna', 'Salomonöarna', 'Samoa', 'San Marino', 'Saudiarabien', 'Schweiz', 'Senegal', 'Serbien', 'Serbien och Montenegro', 'Seychellerna', 'Sierra Leone', 'Singapore', 'Slovakien', 'Slovenien', 'Somalia', 'Spanien', 'Sri Lanka', 'Storbritannien', 'Sudan', 'Surinam', 'Svalbard och Jan Mayen', 'Sverige', 'Swaziland', 'Sydafrika', 'Sydgeorgien och Södra Sandwichöarna', 'Sydkorea', 'Syrien', 'São Tomé och Príncipe',
-        'Tadzjikistan', 'Taiwan', 'Tanzania', 'Tchad', 'Thailand', 'Tjeckien', 'Togo', 'Tokelau', 'Tonga', 'Trinidad och Tobago', 'Tunisien', 'Turkiet', 'Turkmenistan', 'Turks- och Caicosöarna', 'Tuvalu', 'Tyskland',
-        'USA', 'USA:s yttre öar', 'Uganda', 'Ukraina', 'Ungern', 'Uruguay', 'Uzbekistan',
-        'Vanuatu', 'Vatikanstaten', 'Venezuela', 'Vietnam', 'Vitryssland', 'Västsahara', 'Wallis- och Futunaöarna',
-        'Zambia', 'Zimbabwe',
-        'Åland',
-        'Österrike', 'Östtimor'
+        'Öbonäs', 'Öckerö', 'Ödeborg', 'Ödeshög', 'Ödsmål', 'Ödåkra', 'Öggestorp', 'Öjersjö', 'Ölmanäs', 'Ölmbrotorp', 'Ölme', 'Ölmstad', 'Ölsta', 'Önneköp', 'Önnestad', 'Örbyhus', 'Örebro', 'Öregrund', 'Örkelljunga', 'Örnsköldsvik', 'Örserum', 'Örsjö', 'Örslösa', 'Örsundsbro', 'Örtagården', 'Örtofta', 'Örviken', 'Ösmo', 'Östadkulle', 'Östansjö', 'Östavall', 'Österbybruk', 'Österbymo', 'Österforse', 'Österfärnebo', 'Österhagen och Bergliden', 'Österslöv', 'Österstad', 'Östersund', 'Östervåla', 'Östhammar', 'Östhamra', 'Östmark', 'Östnor', 'Östorp och Ådran', 'Östra Bispgården', 'Östra Frölunda', 'Östra Grevie', 'Östra Husby', 'Östra Kallfors', 'Östra Karup', 'Östra Ljungby', 'Östra Ryd', 'Östra Sönnarslöv', 'Östra Tommarp', 'Östra Ånneröd', 'Östraby', 'Överboda', 'Överhörnäs', 'Överkalix', 'Överlida', 'Övertorneå', 'Överum', 'Övre Soppero', 'Övre Svartlå', 'Öxabäck', 'Öxeryd',
     ];
 
     /**
      * @var array Swedish street name formats
      */
     private $streetNameFormats = [
-        '{{lastName}}{{streetSuffix}}',
-        '{{lastName}}{{streetSuffix}}',
-        '{{firstName}}{{streetSuffix}}',
-        '{{firstName}}{{streetSuffix}}',
-        '{{streetPrefix}}{{streetSuffix}}',
-        '{{streetPrefix}}{{streetSuffix}}',
-        '{{streetPrefix}}{{streetSuffix}}',
-        '{{streetPrefix}}{{streetSuffix}}',
-        '{{lastName}} {{streetSuffixWord}}'
+        '{{lastName}}{{Faker\Swedish\Address->streetSuffix}}',
+        '{{lastName}}{{Faker\Swedish\Address->streetSuffix}}',
+        '{{firstName}}{{Faker\Swedish\Address->streetSuffix}}',
+        '{{firstName}}{{Faker\Swedish\Address->streetSuffix}}',
+        '{{Faker\Swedish\Address->streetPrefix}}{{Faker\Swedish\Address->streetSuffix}}',
+        '{{Faker\Swedish\Address->streetPrefix}}{{Faker\Swedish\Address->streetSuffix}}',
+        '{{Faker\Swedish\Address->streetPrefix}}{{Faker\Swedish\Address->streetSuffix}}',
+        '{{Faker\Swedish\Address->streetPrefix}}{{Faker\Swedish\Address->streetSuffix}}',
+        '{{lastName}} {{Faker\Swedish\Address->streetSuffixWord}}',
     ];
 
     /**
      * @var array Swedish street address formats
      */
     private $streetAddressFormats = [
-        '{{streetName}} {{buildingNumber}}'
+        '{{Faker\Swedish\Address->streetName}} {{Faker\Swedish\Address->buildingNumber}}',
     ];
 
     /**
      * @var array Swedish address formats
      */
     private $addressFormats = [
-        "{{streetAddress}}\n{{postcode}} {{city}}"
+        "{{Faker\Swedish\Address->streetAddress}}\n{{Faker\Swedish\Address->postcode}} {{Faker\Swedish\Address->city}}",
     ];
 
-    /**
-     * Randomly return a real city name
-     *
-     * @return string
-     */
-    public function cityName()
-    {
-        return $this->cityNames[array_rand($this->cityNames)];
-    }
-
-    public function streetSuffixWord()
-    {
-        return $this->streetSuffixWord[array_rand($this->streetSuffixWord)];
-    }
-
-    public function streetPrefix()
-    {
-        return $this->streetPrefix[array_rand($this->streetPrefix)];
-    }
-
-    /**
-     * Randomly return a building number.
-     *
-     * @return string
-     */
-    public function buildingNumber()
+    public function buildingNumber(): string
     {
         return strtoupper(Helper::bothify($this->buildingNumber[array_rand($this->buildingNumber)]));
+    }
+
+    public function address(): string
+    {
+        // TODO
+        $format = Helper::randomElement($this->addressFormats);
+
+        return $this->generator->parse($format);
+    }
+
+    public function city(): string
+    {
+        return Helper::randomElement($this->cityNames);
+    }
+
+    public function postcode(): string
+    {
+        return Helper::numerify(Helper::randomElement($this->postcode));
+    }
+
+    public function streetName(): string
+    {
+        $format = Helper::randomElement($this->streetNameFormats);
+
+        return $this->generator->parse($format);
+    }
+
+    public function streetAddress(): string
+    {
+        // TODO
+        $format = Helper::randomElement($this->streetAddressFormats);
+
+        return $this->generator->parse($format);
+    }
+
+    public function streetPrefix(): string
+    {
+        return Helper::randomElement($this->streetPrefix);
+    }
+
+    public function streetSuffix(): string
+    {
+        return Helper::randomElement($this->streetSuffix);
+    }
+
+    public function streetSuffixWord(): string
+    {
+        return Helper::randomElement($this->streetSuffixWord);
     }
 }
