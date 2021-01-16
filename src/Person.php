@@ -28,7 +28,6 @@ class Person implements Extension
      * @see http://spraakbanken.gu.se/statistik/lbfnamnalf.phtml
      */
     private $firstNameFemale = [
-
         'Ada', 'Adela', 'Adele', 'Adéle', 'Adelia', 'Adina', 'Adolfina', 'Agda', 'Agnes', 'Agneta', 'Aina', 'Aino', 'Albertina', 'Alexandra', 'Alfhild', 'Alfrida', 'Alice', 'Alida', 'Ally', 'Alma', 'Alva', 'Amalia', 'Amanda', 'Andrea', 'Anette', 'Angela', 'Anita', 'Anja', 'Ann', 'Anna', 'Anna-Carin', 'Anna-Greta', 'Anna-Karin', 'Anna-Lena', 'Anna-Lisa', 'Anna-Maria', 'Anna-Stina', 'Anne', 'Anneli', 'Annelie', 'Annette', 'Anne-Charlotte', 'Anne-Marie', 'Anni', 'Annica', 'Annie', 'Annika', 'Annikki', 'Anny', 'Ann-Britt', 'Ann-Charlott', 'Ann-Charlotte', 'Ann-Christin', 'Ann-Christine', 'Ann-Katrin', 'Ann-Kristin', 'Ann-Louise', 'Ann-Margret', 'Ann-Mari', 'Ann-Marie', 'Ann-Sofi', 'Ann-Sofie', 'Antonia', 'Arvida', 'Asta', 'Astrid', 'Augusta', 'Aurora', 'Axelia', 'Axelina',
         'Barbro', 'Beata', 'Beatrice', 'Beda', 'Berit', 'Bernhardina', 'Berta', 'Betty', 'Birgit', 'Birgitta', 'Blenda', 'Bodil', 'Boel', 'Borghild', 'Brita', 'Britt', 'Britta', 'Britt-Inger', 'Britt-Louise', 'Britt-Mari', 'Britt-Marie',
         'Camilla', 'Carin', 'Carina', 'Carita', 'Carola', 'Carolina', 'Caroline', 'Catarina', 'Catharina', 'Cathrine', 'Catrin', 'Cecilia', 'Charlott', 'Charlotta', 'Charlotte', 'Christel', 'Christin', 'Christina', 'Christine', 'Clara', 'Clary', 'Constance', 'Cristina',
@@ -94,7 +93,6 @@ class Person implements Extension
      * @see http://www.scb.se/sv_/Hitta-statistik/Statistik-efter-amne/Befolkning/Amnesovergripande-statistik/Namnstatistik/30898/2012A01x/Samtliga-folkbokforda--Efternamn-topplistor/Efternamn-topp-100/
      */
     private $lastName = [
-
         'Abrahamsson', 'Andersson', 'Andreasson', 'Arvidsson', 'Axelsson',
         'Bengtsson', 'Berg', 'Berggren', 'Berglund', 'Bergman', 'Bergqvist', 'Bergström', 'Björk', 'Björklund', 'Blom', 'Blomqvist',
         'Claesson',
@@ -123,7 +121,7 @@ class Person implements Extension
     private $titleFemale = ['Mrs.', 'Ms.', 'Miss', 'Dr.', 'Prof.'];
 
     /**
-     * National Personal Identity number (personnummer)
+     * National Personal Identity number (personnummer).
      *
      * @see http://en.wikipedia.org/wiki/Personal_identity_number_(Sweden)
      *
@@ -139,17 +137,17 @@ class Person implements Extension
         }
         $datePart = $birthdate->format('ymd');
 
-        if ($gender && $gender == PersonInterface::GENDER_MALE) {
-            $randomDigits = (string) Helper::numerify('##') . Helper::randomElement([1, 3, 5, 7, 9]);
+        if ($gender && PersonInterface::GENDER_MALE == $gender) {
+            $randomDigits = (string) Helper::numerify('##').Helper::randomElement([1, 3, 5, 7, 9]);
         } elseif ($gender && $gender == static::GENDER_FEMALE) {
-            $randomDigits = (string) Helper::numerify('##') . Helper::randomElement([0, 2, 4, 6, 8]);
+            $randomDigits = (string) Helper::numerify('##').Helper::randomElement([0, 2, 4, 6, 8]);
         } else {
             $randomDigits = (string) Helper::numerify('###');
         }
 
-        $checksum = Luhn::computeCheckDigit($datePart . $randomDigits);
+        $checksum = Luhn::computeCheckDigit($datePart.$randomDigits);
 
-        return $datePart . '-' . $randomDigits . $checksum;
+        return $datePart.'-'.$randomDigits.$checksum;
     }
 
     /**
@@ -161,19 +159,19 @@ class Person implements Extension
      */
     public function firstName($gender = null)
     {
-        if ($gender === null) {
-            if (mt_rand(0, 1) === 1) {
+        if (null === $gender) {
+            if (1 === mt_rand(0, 1)) {
                 $gender = PersonInterface::GENDER_MALE;
             } else {
                 $gender = PersonInterface::GENDER_FEMALE;
             }
         }
 
-        if ($gender === PersonInterface::GENDER_MALE) {
+        if (PersonInterface::GENDER_MALE === $gender) {
             return $this->firstNameMale();
         }
 
-        if ($gender === PersonInterface::GENDER_FEMALE) {
+        if (PersonInterface::GENDER_FEMALE === $gender) {
             return $this->firstNameFemale();
         }
     }
@@ -207,19 +205,19 @@ class Person implements Extension
      */
     public function title($gender = null)
     {
-        if ($gender === null) {
-            if (mt_rand(0, 1) === 1) {
+        if (null === $gender) {
+            if (1 === mt_rand(0, 1)) {
                 $gender = PersonInterface::GENDER_MALE;
             } else {
                 $gender = PersonInterface::GENDER_FEMALE;
             }
         }
 
-        if ($gender === PersonInterface::GENDER_MALE) {
+        if (PersonInterface::GENDER_MALE === $gender) {
             return $this->titleMale();
         }
 
-        if ($gender === PersonInterface::GENDER_FEMALE) {
+        if (PersonInterface::GENDER_FEMALE === $gender) {
             return $this->titleFemale();
         }
     }

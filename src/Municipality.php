@@ -5,7 +5,7 @@ namespace Faker\Swedish;
 use Faker\Extension\Extension;
 
 /**
- * Swedish municipalities
+ * Swedish municipalities.
  */
 class Municipality implements Extension
 {

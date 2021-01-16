@@ -122,7 +122,7 @@ class Address
     ];
 
     /**
-     * Randomly return a real city name
+     * Randomly return a real city name.
      *
      * @return string
      */
